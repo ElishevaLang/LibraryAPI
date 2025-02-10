@@ -1,18 +1,47 @@
 package service
 
+import (
+	"libraryapi/models"
+	"libraryapi/storage"
+)
 
 type AuthorService struct {
-	authors map[string]string // AuthorID, AuthorName
+	store *storage.Store
 }
 
-func NewAuthorService() *AuthorService {
-	return &AuthorService{authors: make(map[string]string)}
+func NewAuthorService(store *storage.Store) *AuthorService {
+	return &AuthorService{store: store}
 }
 
-func (s *AuthorService) AddAuthor(id string, name string) {
-	s.authors[id] = name
+func (s *AuthorService) AddAuthor(author models.Author) error {
+	s.store.AddAuthor(author)
+	return nil
 }
 
-func (s *AuthorService) GetAuthorName(id string) string {
-	return s.authors[id]
+func (s *AuthorService) GetAuthorByID(id string) (*models.Author, error) {
+	return s.store.GetAuthorByID(id)
 }
+
+func (s *AuthorService) UpdateAuthor(id string, newName string) error {
+	return s.store.UpdateAuthor(id, newName)
+}
+
+func (s *AuthorService) DeleteAuthor(id string) error {
+	return s.store.DeleteAuthor(id)
+}
+
+// func (s *AuthorService) SearchAuthorsByName(query string) []models.Author {
+// 	return s.store.SearchAuthorsByName(query)
+// }
+
+//================================================================
+func (s *AuthorService) SearchAuthorsByName(query string) []models.Author {
+	return s.store.SearchAuthorsByName(query)
+}
+//================================================================
+
+func (s *AuthorService) GetAllAuthors() []models.Author {
+	return s.store.GetAllAuthors()
+}
+
+
